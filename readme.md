@@ -62,4 +62,5 @@ app.listen(3000,()=>{
  ## Database , Schema and models
 - create config folder inside src and create database.js file.
 - Install mongoose and get connected to database.
+- created a userSchema by mongoose.Schema and userModel by mongoose.model("modelName",schemaName).
 - 
