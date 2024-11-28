@@ -1,8 +1,14 @@
-const express= require("express")
+const express= require("express") 
 const app = express()
-app.use("/",(req,res)=>{
-    res.send("this is / route")
+const connectDB=require("./config/database")
+
+connectDB()
+.then(()=>{
+    console.log("Database connected successfully"),
+    app.listen(3000,()=>{
+        console.log("listening on the port 3000")
+    })
 })
-app.listen(3000,()=>{
-    console.log("listening on the port 3000")
+.catch((err)=>{
+    console.log("Database cant be connected")
 })
