@@ -63,4 +63,26 @@ app.listen(3000,()=>{
 - create config folder inside src and create database.js file.
 - Install mongoose and get connected to database.
 - created a userSchema by mongoose.Schema and userModel by mongoose.model("modelName",schemaName).
+- added few users to database , in user model.
+eg: app.post("/signup",async(req,res)=>{
+    //creating a new instance of user Model
+    const user=new User({
+        firstName:"neelesh",
+        lastName:"nainwal",
+        emailId:"neelesh@gmail.com",
+        password:"neelesh@123"
+})
+try{
+    await user.save()
+    res.send("User added successfully")
+}
+catch(err){
+    res.status(401).send("something went wrong")
+}
+
+})
+
+## Diving into the APIs
+- what is the difference between JS object and JSON ?
+- Using middleware express.JSON to onvert JSON object to javascript object , because the data will come in json format and it ahs to be converted into javascript object.
 - 
