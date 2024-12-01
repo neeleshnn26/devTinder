@@ -2,13 +2,31 @@ const express= require("express")
 const app = express()
 const connectDB=require("./config/database") 
 const User=require("./models/user")
+const {validateSignupData}=require("./utils/validation")
+const bcrypt = require('bcrypt');
 
 app.use(express.json())
-
+//Signup Api
 app.post("/signup",async(req,res)=>{
+ try{   
+    // validating data
+    validateSignupData(req);
+    const {firstName,lastName,emailId,age,skills,gender,password}=req.body
+
+    // Encrypt the password
+    const passwordHash=await bcrypt.hash(password,10);
+
     //creating a new instance of user Model
-    const user=new User(req.body)
-try{
+    const user=new User({
+        firstName,
+        lastName,
+        emailId,
+        password:passwordHash,
+        gender,
+        age,
+        skills
+    })
+
     await user.save()
     res.send("User added successfully")
 }
@@ -17,6 +35,29 @@ catch(err){
 }
 
 })
+
+//login 
+app.post("/login",async(req,res)=>{
+  try{
+   const{emailId,password}=req.body
+    const user=await User.findOne({emailId:emailId})
+    if(!user)
+    {
+        throw new Error("something went wrong")
+    }
+   const isPasswordValid= await bcrypt.compare(password,user.password)
+   if(isPasswordValid){
+    res.send("login successful")
+   }
+   else{
+    throw new Error ("something went wrong")
+   }
+    }
+    catch(err){
+        res.status(400).send("ERROR:"+err.message)
+    }
+})
+
 //GET user by email
 app.get("/user",async(req,res)=>{
     const email=req.body.emailId

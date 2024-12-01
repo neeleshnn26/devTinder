@@ -134,3 +134,29 @@ app.get("/feed",async(req,res)=>{
 - Adding validation on to the skills field.
 - We can use validator library from , npm validator (npm i validator) to validate emailId , photURL , strongPasswordetc.
 - We can use this validator for both schema level as well as for API level .
+
+## Encrypting password
+- validating the user before signing up.
+- we will use npm package "bcrypt" to encrypt the password.
+- eg: const passwordHash=await bcrypt.hash(password,10).
+- created login API
+  eg: app.post("/login",async(req,res)=>{
+  try{
+   const{emailId,password}=req.body
+    const user=await User.findOne({emailId:emailId})
+    if(!user)
+    {
+        throw new Error("Email id is not valid")
+    }
+   const isPasswordValid= await bcrypt.compare(password,user.password)
+   if(isPasswordValid){
+    res.send("login successful")
+   }
+   else{
+    throw new Error ("password is not correct")
+   }
+    }
+    catch(err){
+        res.status(400).send("ERROR:"+err.message)
+    }
+})

@@ -4,7 +4,7 @@ const userSchema= mongoose.Schema({
   firstName:{
       type:String,
       required:true,
-      minLength:3 
+      minLength:3
   },
   lastName:{
     type:String 
