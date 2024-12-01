@@ -12,7 +12,7 @@ try{
     res.send("User added successfully")
 }
 catch(err){
-    res.status(401).send("something went wrong")
+    res.status(401).send(err.message )
 }
 
 })
@@ -58,13 +58,15 @@ app.delete("/delete",async(req,res)=>{
 app.patch("/patch",async(req,res)=>{
     const userId=req.body.userId
     const data=req.body
-   const updatedUser= await User.findByIdAndUpdate(userId,data,{returnDocument:'before'})
-    if(!updatedUser){
-        res.status(400).send("something went wrong")
-    }
-    else{
-        res.send(updatedUser)
-    }
+  try{
+    const updatedUser= await User.findByIdAndUpdate(userId,data,{returnDocument:'after' , runValidators:true})
+   res.send("user updated successfully")
+  }
+  catch(err)
+  {
+    res.status(400).send("Update failed"+ err.message)
+  }
+   
 })
 connectDB()
 .then(()=>{

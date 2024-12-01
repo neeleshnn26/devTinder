@@ -128,4 +128,6 @@ app.get("/feed",async(req,res)=>{
 })
 
 ## Data sanitization and schema validations
+- Fields for data sanitization on schema: required , unique , default , lowercase(to keep the data same for everyone ),trim,minLength, custom validator .
+- We can create timstamps at schema , {timestamps:true} , this will give when the user was created and was it updated.
 - 
