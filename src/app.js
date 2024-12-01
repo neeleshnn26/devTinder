@@ -16,7 +16,30 @@ catch(err){
 }
 
 })
+//GET user by email
+app.get("/user",async(req,res)=>{
+    const email=req.body.emailId
+    const user = await User.findOne({emailId:email})
+    if(!user){
+        res.status(400).send("something went wrong")
+    }
+    else{
+        res.send(user)
+    }
+   
+})
 
+// FEED API -GET / feed - get all the users from database
+app.get("/feed",async(req,res)=>{
+   const user = await User.find({})
+   if(!user){
+     res.status(400).send("something went wrong")
+   }
+   else{
+    res.send(user)
+   }
+ 
+})
 
 
 
