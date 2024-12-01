@@ -85,4 +85,47 @@ catch(err){
 ## Diving into the APIs
 - what is the difference between JS object and JSON ?
 - Using middleware express.JSON to onvert JSON object to javascript object , because the data will come in json format and it ahs to be converted into javascript object.
+- created two get APIs , "/user" to get user data based on emailId, and "/feed" to get data of all the users , used findOne ,findById,find
+- eg:
+//GET user by email
+app.get("/user",async(req,res)=>{
+    const email=req.body.emailId
+    const user = await User.findOne({emailId:email})
+    if(!user){
+        res.status(400).send("something went wrong")
+    }
+    else{
+        res.send(user)
+    }
+   
+})
+
+// FEED API -GET / feed - get all the users from database
+app.get("/feed",async(req,res)=>{
+   const user = await User.find({})
+   if(!user){
+     res.status(400).send("something went wrong")
+   }
+   else{
+    res.send(user)
+   }
+ 
+})
+- Difference between patch and put.
+- Deleting user by findByIdAndDelete.
+- updating user bt , findByIdAndUpdate(id, update, options) 
+- what are options ?
+- eg: app.patch("/patch",async(req,res)=>{
+    const userId=req.body.userId
+    const data=req.body
+   const updatedUser= await User.findByIdAndUpdate(userId,data,{returnDocument:'before'})
+    if(!updatedUser){
+        res.status(400).send("something went wrong")
+    }
+    else{
+        res.send(updatedUser)
+    }
+})
+
+## Data sanitization and schema validations
 - 
