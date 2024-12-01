@@ -1,4 +1,5 @@
 const mongoose=require("mongoose")
+const validator=require("validator")
 const userSchema= mongoose.Schema({
   firstName:{
       type:String,
@@ -13,11 +14,22 @@ const userSchema= mongoose.Schema({
     lowercase:true,
     required:true ,
     unique:true,
-    trim:true
+    trim:true,
+    validate(value){
+        if(!validator.isEmail(value)){
+         throw new Error ("Invalid Email address"+ value)
+        }
+    }
   },
   password:{
     type:String ,
-    required:true
+    required:true,
+    validate(value){
+        if(!validator.isStrongPassword(value)){
+         throw new Error ("Enter strong password : "+ value)
+        }
+    }
+    
   },
   age:{
     type:Number,
@@ -32,10 +44,22 @@ const userSchema= mongoose.Schema({
     }
   },
   photoUrl:{
-    type:String
+    type:String,
+    validate(value){
+        if(!validator.isURL(value)){
+         throw new Error ("Invalid photo URL"+ value)
+        }
+    }
   },
   skills:{
     type:[String],
+    validate: {
+        validator: function (skills) {
+          // Ensure the array has exactly 4 strings
+          return skills.length <= 4;
+        },
+        message: 'The skills array must contain  4 items.',
+      },
  },
  about:{
   type:String,

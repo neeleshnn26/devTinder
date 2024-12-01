@@ -130,4 +130,7 @@ app.get("/feed",async(req,res)=>{
 ## Data sanitization and schema validations
 - Fields for data sanitization on schema: required , unique , default , lowercase(to keep the data same for everyone ),trim,minLength, custom validator .
 - We can create timstamps at schema , {timestamps:true} , this will give when the user was created and was it updated.
-- 
+- API level validation , like you cant update your email and userId will be retrived from URL.
+- Adding validation on to the skills field.
+- We can use validator library from , npm validator (npm i validator) to validate emailId , photURL , strongPasswordetc.
+- We can use this validator for both schema level as well as for API level .

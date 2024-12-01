@@ -2,6 +2,7 @@ const express= require("express")
 const app = express()
 const connectDB=require("./config/database") 
 const User=require("./models/user")
+
 app.use(express.json())
 
 app.post("/signup",async(req,res)=>{
@@ -55,16 +56,29 @@ app.delete("/delete",async(req,res)=>{
 
 })
 //Update data of the user
-app.patch("/patch",async(req,res)=>{
-    const userId=req.body.userId
+app.patch("/patch/:userId",async(req,res)=>{
+    const userId=req.params?.userId
     const data=req.body
+
+
+
   try{
+
+    const ALLOWED_UPDATES=["userId","photoUrl","skills","age","gender","about"]
+    const isUpdateAllowed=Object.keys(data).
+    every((k)=>ALLOWED_UPDATES.includes(k)
+   )
+   if(!isUpdateAllowed)
+   {
+    throw new Error("Update not allowed")
+   }
+   
     const updatedUser= await User.findByIdAndUpdate(userId,data,{returnDocument:'after' , runValidators:true})
    res.send("user updated successfully")
   }
   catch(err)
   {
-    res.status(400).send("Update failed"+ err.message)
+    res.status(400).send(err.message)
   }
    
 })
