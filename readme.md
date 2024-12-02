@@ -167,3 +167,5 @@ app.get("/feed",async(req,res)=>{
 - We can also set expiry date of the cookie , so when the cookie is expired it wil not work.
 - to read the cookie we need middleware known as cookie parser.
 - so what we have done is , phele humne login k time pe jwt token create kra hai , aur usk baad vo token browser me store ho jaaega , aur jb hum other APIs ko access krenge to hume uss token se validate kia jaaega , agr vo token valid hoga tbhi hume details milegi vrna error aa jaaega. us token k andar humne userId send kri hogi aur jb hum uss token ko decode kreneg secret key dekr to usk baad hum uss token me se userId retrieve kr lege aur uss userId k basis pr hum apne user ka data nikaal lenge.
+- we can also expire our cookie and token.
+- created sendConnectionRequest API.

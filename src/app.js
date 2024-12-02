@@ -6,9 +6,11 @@ const {validateSignupData}=require("./utils/validation")
 const bcrypt = require('bcrypt');
 const cookieParseer=require("cookie-parser")
 const jwt=require("jsonwebtoken")
+const {userAuth}=require("./middlewares/auth")
 
 app.use(express.json())
 app.use(cookieParseer())
+
 
 //Signup Api
 app.post("/signup",async(req,res)=>{
@@ -40,7 +42,6 @@ catch(err){
 
 })
 
-
 //login 
 app.post("/login",async(req,res)=>{
   try{
@@ -54,8 +55,7 @@ app.post("/login",async(req,res)=>{
 
    if(isPasswordValid){
     // Create a JWT token , 
-    const token=await jwt.sign({_id:user._id},"DEV@Tnder$790")
-    console.log(token)
+    const token=await jwt.sign({_id:user._id},"DEV@Tinder$790",{expiresIn:"1d"})
     
     //add the token to the cookie and send it back to the user
     
@@ -72,21 +72,9 @@ app.post("/login",async(req,res)=>{
 })
 
 // Profile api
-app.get("/profile",async(req,res)=>{
+app.get("/profile",userAuth,async(req,res)=>{
     try{
-        const cookies = req.cookies;
-    const{token}=cookies
-    if(!token){
-        throw new Error("something went wrong")
-    }
-    //Validate my token
-    const decodedMessage= await jwt.verify(token,"DEV@Tnder$790")
-    const{_id}=decodedMessage
-    const user = await User.findById(_id)
-    if(!user)
-    {
-        throw new Error("something went wrong ")
-    }
+    const user=req.user
     res.send(user)
     }
     catch(err)
@@ -95,71 +83,18 @@ app.get("/profile",async(req,res)=>{
     }
    
 })
-//GET user by email
-app.get("/user",async(req,res)=>{
-    const email=req.body.emailId
-    const user = await User.findOne({emailId:email})
-    if(!user){
-        res.status(400).send("something went wrong")
-    }
-    else{
-        res.send(user)
-    }
-   
+
+//Send connection request
+app.post("/sendConnectionRequest",userAuth,async(req,res)=>{
+    const user=req.user
+
+   res.send(user.firstName +": sent the connection request")
 })
 
-// FEED API -GET / feed - get all the users from database
-app.get("/feed",async(req,res)=>{
-   const user = await User.find({})
-   if(!user){
-     res.status(400).send("something went wrong")
-   }
-   else{
-    res.send(user)
-   }
- 
-})
-
-// Delete user Api
-app.delete("/delete",async(req,res)=>{
-    const id = req.body.userId
-    const dUser=await User.findByIdAndDelete(id)
-    if(!dUser)
-    {
-        res.status(400).send("something went wrong")
-    }
-    else{
-        res.send("user deleted successfully")
-    }
-
-})
-//Update data of the user
-app.patch("/patch/:userId",async(req,res)=>{
-    const userId=req.params?.userId
-    const data=req.body
 
 
 
-  try{
 
-    const ALLOWED_UPDATES=["userId","photoUrl","skills","age","gender","about"]
-    const isUpdateAllowed=Object.keys(data).
-    every((k)=>ALLOWED_UPDATES.includes(k)
-   )
-   if(!isUpdateAllowed)
-   {
-    throw new Error("Update not allowed")
-   }
-   
-    const updatedUser= await User.findByIdAndUpdate(userId,data,{returnDocument:'after' , runValidators:true})
-   res.send("user updated successfully")
-  }
-  catch(err)
-  {
-    res.status(400).send(err.message)
-  }
-   
-})
 connectDB()
 .then(()=>{
     console.log("Database connected successfully"),
