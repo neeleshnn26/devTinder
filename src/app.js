@@ -4,8 +4,12 @@ const connectDB=require("./config/database")
 const User=require("./models/user")
 const {validateSignupData}=require("./utils/validation")
 const bcrypt = require('bcrypt');
+const cookieParseer=require("cookie-parser")
+const jwt=require("jsonwebtoken")
 
 app.use(express.json())
+app.use(cookieParseer())
+
 //Signup Api
 app.post("/signup",async(req,res)=>{
  try{   
@@ -36,6 +40,7 @@ catch(err){
 
 })
 
+
 //login 
 app.post("/login",async(req,res)=>{
   try{
@@ -46,7 +51,15 @@ app.post("/login",async(req,res)=>{
         throw new Error("something went wrong")
     }
    const isPasswordValid= await bcrypt.compare(password,user.password)
+
    if(isPasswordValid){
+    // Create a JWT token , 
+    const token=await jwt.sign({_id:user._id},"DEV@Tnder$790")
+    console.log(token)
+    
+    //add the token to the cookie and send it back to the user
+    
+    res.cookie("token",token)
     res.send("login successful")
    }
    else{
@@ -58,6 +71,30 @@ app.post("/login",async(req,res)=>{
     }
 })
 
+// Profile api
+app.get("/profile",async(req,res)=>{
+    try{
+        const cookies = req.cookies;
+    const{token}=cookies
+    if(!token){
+        throw new Error("something went wrong")
+    }
+    //Validate my token
+    const decodedMessage= await jwt.verify(token,"DEV@Tnder$790")
+    const{_id}=decodedMessage
+    const user = await User.findById(_id)
+    if(!user)
+    {
+        throw new Error("something went wrong ")
+    }
+    res.send(user)
+    }
+    catch(err)
+    {
+        res.status(400).send("something went wrong")
+    }
+   
+})
 //GET user by email
 app.get("/user",async(req,res)=>{
     const email=req.body.emailId
