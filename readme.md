@@ -169,3 +169,27 @@ app.get("/feed",async(req,res)=>{
 - so what we have done is , phele humne login k time pe jwt token create kra hai , aur usk baad vo token browser me store ho jaaega , aur jb hum other APIs ko access krenge to hume uss token se validate kia jaaega , agr vo token valid hoga tbhi hume details milegi vrna error aa jaaega. us token k andar humne userId send kri hogi aur jb hum uss token ko decode kreneg secret key dekr to usk baad hum uss token me se userId retrieve kr lege aur uss userId k basis pr hum apne user ka data nikaal lenge.
 - we can also expire our cookie and token.
 - created sendConnectionRequest API.
+
+## Diving nto the APIs and express router
+- authRouter
+a. POST/signup
+b. POST/login
+c. POST/logout
+
+- profileRouter
+a. GET/profile/view
+b. PATCH/profile/edit
+c. PATCH/profile/password
+
+- connectionRequestRouter
+a. POST/request/send/interested/:userId
+b. POST/request/send/ignored/:userId
+c. POST/request/review/accepted/:requestId
+d. POST/request/review/rejected/:requestId
+
+- userRouter
+a. GET/user/connections
+b. GET/user/requests
+c. GET/user/feed - Gets you the profile of other users on platform
+
+
