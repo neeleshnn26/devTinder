@@ -192,4 +192,13 @@ a. GET/user/connections
 b. GET/user/requests
 c. GET/user/feed - Gets you the profile of other users on platform
 
+- Making api through express.router.
+- Making of logout api , profile/edit and profile/password api
 
+## Logical DB query and compound indexes
+- created connection request schema
+- created connectionRequest API
+- learnt about $or query in mongoose
+- schema.pre("save) function 
+- why do we need index in DB ?
+- what are advantages and disadvantages of using Index.
