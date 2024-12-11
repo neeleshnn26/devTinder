@@ -45,7 +45,7 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth,async(req,res)=>{
         })
         if(existingConnectionReqest)
         {
-            return res.send(400).json({message:"connection request already exist"})
+            return res.status(400).json({message:"connection request already exist"})
         }
 
        const connectionRequest=new ConnectionRequest({
@@ -63,6 +63,40 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth,async(req,res)=>{
     {
         res.status(400).send("ERROR : " + err.message)
     }
+})
+requestRouter.post("/request/review/:status/:requestId",userAuth,async(req,res)=>{
+    try{
+        const loggedInUser=req.user
+        const{status,requestId}=req.params
+
+        // Validate the status
+        const allowedStatus=["accepted", "rejected"]
+        if(!allowedStatus.includes(status)){
+            return res.status(400).send({message:"Status not allowed !"})
+        }
+       
+
+        const connectionRequest= await ConnectionRequest.findOne({
+            _id:requestId,
+            toUserId:loggedInUser,
+            status:"interested"
+        })
+        if(!connectionRequest)
+        {
+            return res.status(400).send({message:"connection request not found"})
+        }
+       
+        connectionRequest.status=status; 
+        const data = await connectionRequest.save()
+        res.json({message:"connection request: "+ status ,data})
+    
+    }
+    catch(err)
+    {
+        res.status(400).send("ERROR :" + err.essage)
+    }
+     
+
 })
 
 module.exports=requestRouter

@@ -182,14 +182,12 @@ b. PATCH/profile/edit
 c. PATCH/profile/password
 
 - connectionRequestRouter
-a. POST/request/send/interested/:userId
-b. POST/request/send/ignored/:userId
-c. POST/request/review/accepted/:requestId
-d. POST/request/review/rejected/:requestId
+a. POST/request/send/:status/:userId ( status : interested , ignored)
+b. POST/request/review/:status/:requestId (status : accepted , rejected)
 
 - userRouter
-a. GET/user/connections
-b. GET/user/requests
+a. GET/user/requests/received
+b. GET/user/connections
 c. GET/user/feed - Gets you the profile of other users on platform
 
 - Making api through express.router.
@@ -197,8 +195,21 @@ c. GET/user/feed - Gets you the profile of other users on platform
 
 ## Logical DB query and compound indexes
 - created connection request schema
-- created connectionRequest API
+- created connectionRequest API (POST/request/send/:status/:userId ( status : interested , ignored))
 - learnt about $or query in mongoose
-- schema.pre("save) function 
+- schema.pre("save) function  
 - why do we need index in DB ?
 - what are advantages and disadvantages of using Index.
+
+## ref, Populate & Thought process of writing APIs
+- created receiveconnectionRequest API (POST/request/review/:status/:requestId (status : accepted , rejected))
+- created /user/requests/received API 
+- Learnt about (ref) and (populate) they both are very important topic. 
+
+## building feed API and pagination
+- building GET/user/feed API.
+- pagination
+/feed?page=1 & limit=10 => 1-10 => .skip(0) & .limit(10)
+/feed?page=2 & limit=10 => 11-20 => .skip(10) & .limit(10)
+/feed?page=3 & limit=10 => 21-30 => .skip(20) & .limit(10)
+skip=(page-1)*limit
