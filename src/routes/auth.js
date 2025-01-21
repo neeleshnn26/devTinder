@@ -13,7 +13,7 @@ authRouter.post("/signup",async(req,res)=>{
     try{   
        // validating data
        validateSignupData(req);
-       const {firstName,lastName,emailId,age,skills,gender,password}=req.body
+       const {firstName,lastName,emailId,age,skills,gender,password,photoUrl,about}=req.body
    
        // Encrypt the password
        const passwordHash=await bcrypt.hash(password,10);
@@ -26,11 +26,19 @@ authRouter.post("/signup",async(req,res)=>{
            password:passwordHash,
            gender,
            age,
-           skills
+           skills,
+           photoUrl,
+           about
        })
    
-       await user.save()
-       res.send("User added successfully")
+      const savedUser= await user.save()
+
+      const token=await savedUser.getJWT()
+       
+       res.cookie("token",token)
+
+       res.json({message:"user added successfully",data:savedUser})
+
    }
    catch(err){
        res.status(401).send(err.message )
@@ -56,10 +64,10 @@ authRouter.post("/login",async(req,res)=>{
        //add the token to the cookie and send it back to the user
        
        res.cookie("token",token)
-       res.send("login successful")
+       res.send(user)
       }
       else{
-       throw new Error ("something went wrong")
+       throw new Error ("Email or password is incorrect")
       }
        }
        catch(err){

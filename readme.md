@@ -213,3 +213,16 @@ c. GET/user/feed - Gets you the profile of other users on platform
 /feed?page=2 & limit=10 => 11-20 => .skip(10) & .limit(10)
 /feed?page=3 & limit=10 => 21-30 => .skip(20) & .limit(10)
 skip=(page-1)*limit
+
+
+
+
+## Notes
+- app.use(cors(
+    {
+        origin:"http://localhost:5173",
+        credentials:true
+    }
+))
+- we use cors so that we can call our api from cross origin , which means from frontend to backend , localhost:5173 ==> localhost:3000
+- and we have use origin and credentials so that our cookie can we seen in frontend , this is also known as white listing 

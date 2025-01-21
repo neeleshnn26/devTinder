@@ -2,18 +2,28 @@ const express= require("express")
 const app = express()
 const connectDB=require("./config/database") 
 const cookieParseer=require("cookie-parser")
+const cors=require("cors")
+
+app.use(cors(
+    {
+        origin:"http://localhost:5173",
+        credentials:true
+    }
+))
+app.use(express.json())
+app.use(cookieParseer())
+
 const authRouter= require("./routes/auth")
 const profileRouter=require("./routes/profile")
 const requestRouter=require("./routes/request")
 const userRouter=require("./routes/user")
-
-app.use(express.json())
-app.use(cookieParseer())
+const paymentRouter = require("./routes/payment")
 
 app.use("/",authRouter)
 app.use("/",profileRouter)
 app.use("/",requestRouter)
 app.use("/",userRouter)
+
 
 
 

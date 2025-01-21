@@ -12,7 +12,7 @@ try{
     const connectionRequest= await ConnectionRequest.find({
         toUserId:loggedInUser._id,
         status: "interested"
-     }).populate("fromUserId" ,["firstName","lastName","skills"])
+     }).populate("fromUserId" ,["firstName","lastName","skills","photoUrl","age","about","gender"])
 
     res.json({
         message:"data fetched successfully", 
@@ -37,8 +37,8 @@ userRouter.get("/user/connections",userAuth,async(req,res)=>{
             {fromUserId:loggedInUser,status:"accepted"}
            ]
        })
-       .populate("fromUserId" ,["firstName","lastName"])
-       .populate("toUserId" ,["firstName","lastName"])
+       .populate("fromUserId" ,["firstName","lastName","age","about","gender","photoUrl"])
+       .populate("toUserId" ,["firstName","lastName","age","gender","about","photoUrl"])
 
        const data = connectionRequest.map((row)=>{
         if(row.fromUserId._id.toString()===loggedInUser._id.toString()){
@@ -87,12 +87,12 @@ userRouter.get("/user/feed",userAuth,async(req,res)=>{
               {_id:{$nin:Array.from(hideUserFromFeed)}},
               {_id:{$ne:loggedInUser._id}}
             ] })
-            .select("firstName lastName skills")
-            .skip(skip )
-            .limt(limit)
+            .select("firstName lastName skills about gender photoUrl age")
+            .skip(skip)
+            .limit(limit)
              
        
-       res.josn({data:users})
+       res.json({data:users})
     }
     catch(err)
     {

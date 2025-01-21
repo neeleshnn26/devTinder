@@ -45,20 +45,18 @@ const userSchema= mongoose.Schema({
       values:["male","female","others"],
       message:`{VALUE} is not a valid gender type`
     },
-    // validate(value){
-    //     if(!["male","female","others"].includes(value)){
-    //         throw new Error ("Gender data is not valid ")
-    //     }
-    // }
   },
+
   photoUrl:{
     type:String,
     validate(value){
         if(!validator.isURL(value)){
          throw new Error ("Invalid photo URL"+ value)
         }
-    }
+    },
+    default:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
   },
+  
   skills:{
     type:[String],
     validate: {
