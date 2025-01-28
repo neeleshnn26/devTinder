@@ -3,6 +3,7 @@ const requestRouter= express.Router()
 const {userAuth}=require("../middlewares/auth");
 const ConnectionRequest=require("../models/connectionRequest");
 const User = require("../models/user");
+const sendEmail = require("../utils/sendEmail");
 
 //Send connection request
 requestRouter.post("/request/send/:status/:toUserId",userAuth,async(req,res)=>{
@@ -54,14 +55,26 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth,async(req,res)=>{
         status
        })
        const data= await connectionRequest.save();
-       res.json({
-        message:"connection request sent successfully",
-        data
-       })
+
+       try {
+        const emailRes = await sendEmail.run();
+        console.log("Email sent successfully:", emailRes);
+        res.json({
+          message: "Connection request sent successfully",
+          data,
+        });
+      } catch (emailErr) {
+        console.error("Error sending email:", emailErr.message);
+      }
+
+    //    res.json({
+    //     message:"connection request sent successfully",
+    //     data
+    //    })
     }
     catch(err)
     {
-        res.status(400).send("ERROR : " + err.message)
+        console.log(err)
     }
 })
 requestRouter.post("/request/review/:status/:requestId",userAuth,async(req,res)=>{
