@@ -37,16 +37,29 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth,async(req,res)=>{
      // Whether a connection request already exists in the database in the forward direction.
      // Whether a connection request exists in the reverse direction.
 
-     const existingConnectionReqest=await ConnectionRequest.findOne(
+     const existingConnectionRequest=await ConnectionRequest.findOne(
         {
             $or:[
                 {fromUserId,toUserId},
                 {fromUserId:toUserId , toUserId: fromUserId}
             ]
         })
-        if(existingConnectionReqest)
+        if(existingConnectionRequest)
         {
-            return res.status(400).json({message:"connection request already exist"})
+             return res.status(400).json({message:"connection request already exist"})
+            // if (existingConnectionRequest.status === status) {
+            //     return res.status(400).json({ message: "Connection request already exists with the same status" });
+            //   }
+            
+            //   // Agar status alag hai, toh update karo
+            //   existingConnectionRequest.status = status;
+            //   await existingConnectionRequest.save();
+            
+            //   return res.json({
+            //     message: "Connection request status updated successfully",
+            //     data: existingConnectionRequest,
+            //   });
+            
         }
 
        const connectionRequest=new ConnectionRequest({
