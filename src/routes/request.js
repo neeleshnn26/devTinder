@@ -46,19 +46,18 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth,async(req,res)=>{
         })
         if(existingConnectionRequest)
         {
-             return res.status(400).json({message:"connection request already exist"})
-            // if (existingConnectionRequest.status === status) {
-            //     return res.status(400).json({ message: "Connection request already exists with the same status" });
-            //   }
+            // return res.status(400).json({message:"connection request already exist"})
+            if (existingConnectionRequest.status === status) {
+                return res.status(200).json({ message: "Status already set", data: existingConnectionRequest });
+            }
             
-            //   // Agar status alag hai, toh update karo
-            //   existingConnectionRequest.status = status;
-            //   await existingConnectionRequest.save();
+            existingConnectionRequest.status = status;
+            await existingConnectionRequest.save();
             
-            //   return res.json({
-            //     message: "Connection request status updated successfully",
-            //     data: existingConnectionRequest,
-            //   });
+            return res.json({
+                message: "Connection request status updated successfully",
+                data: existingConnectionRequest,
+            });
             
         }
 
